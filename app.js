@@ -14,7 +14,7 @@ app.use("/", routes);
 //;pp
 app.use('*', express.static(buildPath));
 
-console.log("Quang dep trai nhat qua dat"); ass
+console.log("Quang dep trai nhat qua dat");ádsasad
 
 var server = http.createServer(app);
 server.listen(app.get("port"), () =>{
