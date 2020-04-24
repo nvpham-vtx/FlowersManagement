@@ -13,12 +13,12 @@ const routes = [
     path: "/",
     exact: true,
     // sidebar: () => <div>home!</div>,
-    main: FsmDashboard
+    main: LoginForm
   },
   {
     path: "/dashboard",
     // sidebar: () => <div>bubblegum!</div>,
-    main: LoginForm
+    main: FsmDashboard
   },
 ];
 

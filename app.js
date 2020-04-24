@@ -16,4 +16,3 @@ var server = http.createServer(app);
 server.listen(app.get("port"), () =>{
     console.log("Listen port " + app.get("port"));
 })
-
