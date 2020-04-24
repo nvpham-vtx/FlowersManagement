@@ -13,7 +13,11 @@ app.use(bodyParser.json());
 app.use("/", routes);
 //;pp
 app.use('*', express.static(buildPath));
+
+console.log("Quang dep trai nhat qua dat");
+
 var server = http.createServer(app);
 server.listen(app.get("port"), () =>{
     console.log("Listen port " + app.get("port"));
 })
+
