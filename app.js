@@ -11,8 +11,7 @@ app.use(express.static(__dirname + "/client/build"));
 app.use(bodyParser.urlencoded({extended: true,}));
 app.use(bodyParser.json());
 app.use("/", routes);
-app.use('*', express.static(buildPath));ohohoh
-
+app.use('*', express.static(buildPath));
 var server = http.createServer(app);
 server.listen(app.get("port"), () =>{
     console.log("Listen port " + app.get("port"));
