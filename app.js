@@ -11,10 +11,7 @@ app.use(express.static(__dirname + "/client/build"));
 app.use(bodyParser.urlencoded({extended: true,}));
 app.use(bodyParser.json());
 app.use("/", routes);
-//;pp
 app.use('*', express.static(buildPath));
-
-console.log("Quang dep trai nhat qua dat");ádsasad
 
 var server = http.createServer(app);
 server.listen(app.get("port"), () =>{
