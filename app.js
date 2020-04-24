@@ -14,7 +14,7 @@ app.use("/", routes);
 //;pp
 app.use('*', express.static(buildPath));
 
-console.log("Quang dep trai nhat qua dat");
+console.log("Quang dep trai nhat qua dat vinh nhu con dau buoi");
 
 var server = http.createServer(app);
 server.listen(app.get("port"), () =>{
