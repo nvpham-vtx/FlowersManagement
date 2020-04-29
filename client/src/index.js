@@ -1,7 +1,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import 'antd/dist/antd.css';
-import App from './fsm.router/fsm.router';
+import App from './app.router';
+import  "admin-lte/dist/css/adminlte.min.css";
+import  "admin-lte/dist/js/adminlte.min.js";
 
 ReactDOM.render(
   <React.StrictMode>

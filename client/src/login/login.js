@@ -1,52 +1,65 @@
 import React from 'react';
-import { Form, Input, Button, Checkbox } from 'antd';
+import UserService from '../services/users.service';
 
 export default class LoginForm extends React.Component {
+  loginPage() {
+    UserService.getAllUsers()
+      .then(data => {
+        console.log(data);
+      });
+  }
+
   render() {
     return (
-      <div class="bg-gradient-primary">
-        <div class="container">
-          <div class="row justify-content-center">
-            <div class="col-xl-10 col-lg-12 col-md-9">
-              <div class="card o-hidden border-0 shadow-lg my-5">
-                <div class="card-body p-0">
-                  <div class="row">
-                    <div class="col-lg-6 d-none d-lg-block bg-login-image">
-                    <img src="https://avatars1.githubusercontent.com/u/20296778?s=400&amp;u=c65249f84104b51a28b6edb097897940993adb12&amp;v=4"/>
-                    </div>
-                    <div class="col-lg-6">
-                      <div class="p-5">
-                        <div class="text-center">
-                          <h1 class="h4 text-gray-900 mb-4">Welcome Flowers Management</h1>
-                        </div>
-                        <div class="form-group">
-                          <input type="email" class="form-control form-control-user" id="exampleInputEmail" aria-describedby="emailHelp" placeholder="Enter Email Address..." />
-                        </div>
-                        <div class="form-group">
-                          <input type="password" class="form-control form-control-user" id="exampleInputPassword" placeholder="Password" />
-                        </div>
-                        <div class="form-group">
-                          <div class="custom-control custom-checkbox small">
-                            <input type="checkbox" class="custom-control-input" id="customCheck" />
-                            <label class="custom-control-label" for="customCheck">Remember Me</label>
-                          </div>
-                        </div>
-                        <a href="/dashboard" class="btn btn-primary btn-user btn-block">Login </a>
-                        <a class="btn btn-success btn-user btn-block">
-                        <i class="fab fa-google"></i> Login with Google</a>
-                        <a class="btn btn-primary active btn-user btn-block">
-                        <i class="fab fa-facebook"></i>Login with Facebook</a>
-                        <div class="text-center">
-                          <a class="small" href="forgot-password.html">Forgot Password?</a>
-                        </div>
-                        <div class="text-center">
-                          <a class="small" href="register.html">Create an Account!</a>
-                        </div>
-                      </div>
-                    </div>
+      <div class="hold-transition login-page">
+        <div class="login-box">
+          <div class="card">
+            <div class="card-body login-card-body">
+              <p class="login-box-msg"><h3>Flowers Management</h3></p>
+              <div class="input-group mb-3">
+                <input type="email" class="form-control" placeholder="Email" />
+                <div class="input-group-append">
+                  <div class="input-group-text">
+                    <span class="fas fa-envelope"></span>
                   </div>
                 </div>
               </div>
+              <div class="input-group mb-3">
+                <input type="password" class="form-control" placeholder="Password" />
+                <div class="input-group-append">
+                  <div class="input-group-text">
+                    <span class="fas fa-lock"></span>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-8">
+                  <div class="icheck-primary">
+                    <input type="checkbox" id="remember" />
+                    <label for="remember">
+                      Remember Me
+              </label>
+                  </div>
+                </div>
+                <div class="col-4">
+                  <button onClick={this.loginPage} class="btn btn-primary btn-block">Sign In</button>
+                </div>
+              </div>
+              <div class="social-auth-links text-center mb-3">
+                <p>- OR -</p>
+                <a href="#" class="btn btn-block btn-primary">
+                  <i class="fab fa-facebook mr-2"></i> Sign in using Facebook
+        </a>
+                <a href="#" class="btn btn-block btn-danger">
+                  <i class="fab fa-google-plus mr-2"></i> Sign in using Google+
+        </a>
+              </div>
+              <p class="mb-1">
+                <a href="forgot-password.html">I forgot my password</a>
+              </p>
+              <p class="mb-0">
+                <a href="register.html" class="text-center">Register a new membership</a>
+              </p>
             </div>
           </div>
         </div>

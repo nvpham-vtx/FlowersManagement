@@ -5,8 +5,8 @@ import {
   Route,
   BrowserRouter
 } from "react-router-dom";
-import LoginForm from '../login/login';
-import FsmDashboard from '../dashboard/fsm.dashboard'
+import LoginForm from './login/login';
+import FsmRouter from './fsm.router/fsm.router';
 
 const routes = [
   {
@@ -15,11 +15,12 @@ const routes = [
     // sidebar: () => <div>home!</div>,
     main: LoginForm
   },
-  // {
-  //   path: "/dashboard",
-  //   // sidebar: () => <div>bubblegum!</div>,
-  //   main: FsmDashboard
-  // },
+  {
+    path: "/dashboard",
+    exact: true,
+    // sidebar: () => <div>home!</div>,
+    main: FsmRouter
+  },
 ];
 
 export default function AppRouter() {
@@ -27,7 +28,7 @@ export default function AppRouter() {
     <BrowserRouter>
       <Switch>
         {routes.map((route, index) => (
-          <Route
+          <Route 
             key={index}
             path={route.path}
             exact={route.exact}

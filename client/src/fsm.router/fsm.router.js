@@ -4,6 +4,7 @@ import FsmSidebar from '../fsm.sidebar/fsm.sidebar';
 import FsmFooter from '../fsm.footer/fsm.footer';
 import FsmHeader from '../fsm.header/fsm.header';
 import FsmDashboard from '../dashboard/fsm.dashboard';
+import LoginForm from '../login/login';
 
 export default class FsmRouter extends React.Component{
     render() {
@@ -16,7 +17,8 @@ export default class FsmRouter extends React.Component{
                             <FsmHeader />
                             <div class="container-fluid">
                                 <Switch>
-                                    <Route exact path="/dashboard" component={FsmDashboard} />
+                                    <Route path="/dashboard" component={FsmDashboard} />
+                                    <Route path="/login" component={LoginForm} />
                                 </Switch>
                             </div>
                             <FsmFooter />
