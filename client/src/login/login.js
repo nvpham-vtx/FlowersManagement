@@ -2,7 +2,29 @@ import React from 'react';
 import UserService from '../services/users.service';
 
 export default class LoginForm extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      email: "", 
+      password: ""
+    }
+  }
+
+  changeEmail(self) {
+    this.setState({
+      email: self.target.value,
+    })
+  }
+
+  changePassword(self) {
+    this.setState({
+      password: self.target.value,
+    })
+  }
+
   loginPage() {
+    var email = this.state.email;
+    var password = this.state.password;
     UserService.getAllUsers()
       .then(data => {
         console.log(data);
@@ -17,7 +39,7 @@ export default class LoginForm extends React.Component {
             <div class="card-body login-card-body">
               <p class="login-box-msg"><h3>Flowers Management</h3></p>
               <div class="input-group mb-3">
-                <input type="email" class="form-control" placeholder="Email" />
+                <input type="email" value = {this.state.email} onChange={this.changeEmail.bind(this)} class="form-control" placeholder="Email" />
                 <div class="input-group-append">
                   <div class="input-group-text">
                     <span class="fas fa-envelope"></span>
@@ -25,7 +47,7 @@ export default class LoginForm extends React.Component {
                 </div>
               </div>
               <div class="input-group mb-3">
-                <input type="password" class="form-control" placeholder="Password" />
+                <input type="password" class="form-control" onChange={this.changePassword.bind(this)} value = {this.state.password} placeholder="Password" />
                 <div class="input-group-append">
                   <div class="input-group-text">
                     <span class="fas fa-lock"></span>
@@ -42,7 +64,7 @@ export default class LoginForm extends React.Component {
                   </div>
                 </div>
                 <div class="col-4">
-                  <button onClick={this.loginPage} class="btn btn-primary btn-block">Sign In</button>
+                  <button onClick={this.loginPage.bind(this)} class="btn btn-primary btn-block">Sign In</button>
                 </div>
               </div>
               <div class="social-auth-links text-center mb-3">

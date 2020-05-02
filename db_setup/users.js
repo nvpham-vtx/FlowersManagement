@@ -17,8 +17,8 @@ function getAllUsers(req, res) {
             }));
             return;
         }
-        connection.execute('select * from users', {}, {
-            outFormat: oracledb.DBObject
+        connection.execute("select id, name, email, phone from users", {}, {
+            outFormat: oracledb.OBJECT
         }, function(err, result) {
             if(err) {
                 res.set('Content-Type', 'application/json');

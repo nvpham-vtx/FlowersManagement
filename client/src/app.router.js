@@ -1,41 +1,46 @@
 import React from "react";
-import {
-  BrowserRouter as Router,
-  Switch,
-  Route,
-  BrowserRouter
-} from "react-router-dom";
+import { Switch, Route, BrowserRouter, useLocation } from "react-router-dom";
 import LoginForm from './login/login';
-import FsmRouter from './fsm.router/fsm.router';
+import FsmSidebar from './fsm.sidebar/fsm.sidebar';
+import FsmFooter from './fsm.footer/fsm.footer';
+import FsmHeader from './fsm.header/fsm.header';
+import FsmDashboard from './dashboard/fsm.dashboard';
 
-const routes = [
-  {
-    path: "/",
-    exact: true,
-    // sidebar: () => <div>home!</div>,
-    main: LoginForm
-  },
-  {
-    path: "/dashboard",
-    exact: true,
-    // sidebar: () => <div>home!</div>,
-    main: FsmRouter
-  },
-];
-
-export default function AppRouter() {
-  return (
-    <BrowserRouter>
-      <Switch>
-        {routes.map((route, index) => (
-          <Route 
-            key={index}
-            path={route.path}
-            exact={route.exact}
-            children={<route.main />}
-          />
-        ))}
-      </Switch>
-    </BrowserRouter>
-  );
+export default class AppRouter extends React.Component {
+  constructor(props) {
+    super(props);
+  }
+ 
+  routes = [
+    {
+      path: "/",
+      exact: true,
+      // sidebar: () => <div>home!</div>,
+      main: LoginForm
+    },
+    {
+      path: "/dashboard",
+      exact: true,
+      // sidebar: () => <div>home!</div>,
+      main: FsmDashboard
+    },
+  ];
+  currentPath = window.location.pathname;
+  render() {
+    return (
+      <BrowserRouter>
+        {this.currentPath != "/" ? <FsmSidebar /> : null}
+        {this.currentPath != "/" ? <FsmHeader /> : null }
+        <Switch>
+          {this.routes.map((route, index) => (
+            <Route key={index}
+              path={route.path}
+              exact={route.exact}
+              children={<route.main />} />
+          ))}
+        </Switch>
+        {this.currentPath != "/" ? <FsmFooter /> :null }
+      </BrowserRouter>
+    )
+  }
 }
