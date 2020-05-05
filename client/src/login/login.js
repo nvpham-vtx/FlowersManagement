@@ -1,7 +1,8 @@
 import React from 'react';
+import { withRouter } from "react-router-dom";
 import UserService from '../services/users.service';
 
-export default class LoginForm extends React.Component {
+class LoginForm extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -23,11 +24,12 @@ export default class LoginForm extends React.Component {
   }
 
   loginPage() {
-    var email = this.state.email;
-    var password = this.state.password;
+    let email = this.state.email;
+    let password = this.state.password;
     UserService.getAllUsers()
       .then(data => {
         console.log(data);
+        this.props.history.push("/dashboard");
       });
   }
 
@@ -89,3 +91,5 @@ export default class LoginForm extends React.Component {
     );
   }
 }
+
+export default withRouter(LoginForm);

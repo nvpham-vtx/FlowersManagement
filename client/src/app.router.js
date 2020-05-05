@@ -1,5 +1,5 @@
 import React from "react";
-import { Switch, Route, BrowserRouter, useLocation } from "react-router-dom";
+import { Switch, Route, BrowserRouter} from "react-router-dom";
 import LoginForm from './login/login';
 import FsmSidebar from './fsm.sidebar/fsm.sidebar';
 import FsmFooter from './fsm.footer/fsm.footer';
@@ -25,12 +25,12 @@ export default class AppRouter extends React.Component {
       main: FsmDashboard
     },
   ];
-  currentPath = window.location.pathname;
   render() {
+    let currentPath = window.location.pathname;
     return (
-      <BrowserRouter>
-        {this.currentPath != "/" ? <FsmSidebar /> : null}
-        {this.currentPath != "/" ? <FsmHeader /> : null }
+      <BrowserRouter forceRefresh={true}>
+        {currentPath != "/" ? <FsmSidebar /> : null}
+        {currentPath != "/" ? <FsmHeader /> : null }
         <Switch>
           {this.routes.map((route, index) => (
             <Route key={index}
