@@ -1,7 +1,7 @@
 const oracledb = require('oracledb')
 const config = {
   user: 'SYS',
-  password: 'Nvp123456',
+  password: 'Phamngoc1999',
   connectString: 'localhost:1521/orcl',
   privilege: oracledb.SYSDBA
 }
@@ -17,7 +17,7 @@ function getAllUsers(req, res) {
             }));
             return;
         }
-        connection.execute("select id, name, email, phone from users", {}, {
+        connection.execute("select name, email,pass, phone from users", {}, {
             outFormat: oracledb.OBJECT
         }, function(err, result) {
             if(err) {

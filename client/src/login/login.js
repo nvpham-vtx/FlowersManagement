@@ -24,12 +24,21 @@ class LoginForm extends React.Component {
   }
 
   loginPage() {
+    let x=0;
     let email = this.state.email;
     let password = this.state.password;
     UserService.getAllUsers()
       .then(data => {
         console.log(data);
-        this.props.history.push("/dashboard");
+        for (let i=0;i<data.data.length;i++){
+          if (email == data.data[i].EMAIL && password == data.data[i].PASS){
+            x+=1;
+          }}
+         if (x==1){
+          this.props.history.push("/dashboard");
+         }else{
+           alert("Incorect Password Or Email");
+         }
       });
   }
 

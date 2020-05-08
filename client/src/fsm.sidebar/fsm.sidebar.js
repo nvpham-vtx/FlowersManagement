@@ -31,11 +31,17 @@ export default class FsmSidebar extends React.Component {
                             </li>
                             <li class="nav-header">CUSSTOMERS</li>
                             <li class="nav-item">
+                                <a href="/customer" class="nav-link">
+                                    <i class="fas fa-circle nav-icon"></i>
+                                    <p>All Customers</p>
+                                </a>
+                            </li>
+                            <li class="nav-item">
                                 <a href="#" class="nav-link">
                                     <i class="fas fa-circle nav-icon"></i>
                                     <p>Level 1</p>
                                 </a>
-                            </li>
+                            </li>                         
                             <li class="nav-item has-treeview">
                                 <a href="#" class="nav-link">
                                     <i class="nav-icon fas fa-circle"></i>

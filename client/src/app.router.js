@@ -5,6 +5,7 @@ import FsmSidebar from './fsm.sidebar/fsm.sidebar';
 import FsmFooter from './fsm.footer/fsm.footer';
 import FsmHeader from './fsm.header/fsm.header';
 import FsmDashboard from './dashboard/fsm.dashboard';
+import AllCustomer from "./cusstomers/fsm.allcustomers";
 
 export default class AppRouter extends React.Component {
   constructor(props) {
@@ -23,6 +24,12 @@ export default class AppRouter extends React.Component {
       exact: true,
       // sidebar: () => <div>home!</div>,
       main: FsmDashboard
+    },
+    {
+      path: "/customer",
+      exact: true,
+      // sidebar: () => <div>home!</div>,
+      main: AllCustomer
     },
   ];
   render() {
