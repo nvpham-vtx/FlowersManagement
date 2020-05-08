@@ -1,15 +1,4 @@
 import React from 'react';
-import { Layout, Menu, Breadcrumb } from 'antd';
-import {
-  DesktopOutlined,
-  PieChartOutlined,
-  FileOutlined,
-  TeamOutlined,
-  UserOutlined,
-} from '@ant-design/icons';
-
-const { Header, Content, Footer, Sider } = Layout;
-const { SubMenu } = Menu;
 
 export default class FsmDashboard extends React.Component {
   state = {
