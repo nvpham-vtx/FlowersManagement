@@ -1,0 +1,9 @@
+users [
+    {field: id: auto increment, type: integer},
+    {field: email, type: varchar50},
+    {field: name, type: varchar50},
+    {field: phone, type: varchar20},
+    {field: password, type: varchar50},
+    {field: createat, type: Date},
+    {field: updateat, type: Date},
+]

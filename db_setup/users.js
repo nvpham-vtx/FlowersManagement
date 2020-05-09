@@ -8,7 +8,7 @@ const config = {
 }
 
 function authenticateUser(req, res) {
-    const {email, password} = req.body;
+    const { email, password } = req.body;
     oracledb.getConnection(config, function (err, connection) {
         if (err) {
             res.set('Content-Type', 'application/json');
@@ -68,7 +68,7 @@ function getAllUsers(req, res) {
             }));
             return;
         }
-        connection.execute("select id, name, email, phone from users", {}, {
+        connection.execute("select id, email, name, phone from users", {}, {
             outFormat: oracledb.OBJECT
         }, function (err, result) {
             if (err) {
@@ -79,7 +79,8 @@ function getAllUsers(req, res) {
                     detailsMsg: err.message
                 }));
             } else {
-                res.contentType('application/json').status(200).send(JSON.stringify({
+                res.contentType('application/json');
+                res.status(200).send(JSON.stringify({
                     status: 200,
                     data: result.rows,
                     message: "Recived all users"
@@ -95,7 +96,46 @@ function getAllUsers(req, res) {
     })
 }
 
+function createUser(req, res) {
+    oracledb.getConnection(config, function (err, connection) {
+        if (err) {
+            res.set('Content-Type', 'application/json');
+            res.status(500).send(JSON.stringify({
+                status: 500,
+                message: "Error connecting to database",
+                detailsMsg: err.message
+            }));
+            return;
+        }
+        let sqlQuery = `insert into users(email, name, phone, password, createat) 
+        values('${req.body.email?req.body.email:''}', '${req.body.name ?req.body.name:''}',
+        '${req.body.phone?req.body.phone:''}','${req.body.password?req.body.password:''}',
+        '${req.body.createat?req.body.createat:''}')`;
+        connection.execute(sqlQuery, {}, {autoCommit:true, outFormat: oracledb.OBJECT
+        }, function (err, result) {
+            if (err) {
+                res.set('Content-Type', 'application/json');
+                res.status(500).send(JSON.stringify({
+                    status: 500,
+                    message: "Error create user",
+                    detailsMsg: err.message
+                }));
+            } else {
+                res.contentType('application/json');
+                res.status(200).set(req.body.email).end();
+            }
+            connection.release(
+                function (err) {
+                    if (err) console.error(err.message);
+                    console.log("Get /users: connect release");
+                }
+            )
+        })
+    })
+}
+
 module.exports = {
     getAllUsers: getAllUsers,
-    authenticateUser: authenticateUser
+    authenticateUser: authenticateUser,
+    createUser: createUser
 }

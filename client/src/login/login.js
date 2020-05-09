@@ -12,6 +12,7 @@ class LoginForm extends React.Component {
       email: "",
       password: "",
       blocking: false,
+      isShow: false,
     };
   }
 
@@ -34,10 +35,16 @@ class LoginForm extends React.Component {
     let password = this.state.password;
     UserService.authenticateUser(email, password)
       .then(response => {
-        commom.setSessionStorage(response.headers['x-access-token'], response.data.user.EMAIL);
-      }).finally(() => {
-        this.setState({ blocking: !this.state.blocking });
+        commom.setSessionStorage(response.headers['x-access-token'], response.data.user.EMAIL); 
+        this.setState({ blocking: !this.state.blocking });     
         this.props.history.push('/dashboard');
+      }).catch((error) => {
+        console.log(error);
+        this.setState({isShow:  true});
+        this.setState({ blocking: !this.state.blocking });
+      })
+      .finally(() => {
+       
       })
   }
 
@@ -56,6 +63,7 @@ class LoginForm extends React.Component {
                       <span class="fas fa-envelope"></span>
                     </div>
                   </div>
+                  {this.state.isShow ? <span style={{color: 'red'}}>Invalid email</span> : null}
                 </div>
                 <div class="input-group mb-3">
                   <input type="password" class="form-control" onChange={this.changePassword.bind(this)} value={this.state.password} placeholder="Password" />

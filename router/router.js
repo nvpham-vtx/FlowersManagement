@@ -4,4 +4,5 @@ var db = require("../db_setup/users");
 
 router.get("/api/users", db.getAllUsers);
 router.post("/api/signin", db.authenticateUser);
+router.post("/api/users", db.createUser);
 module.exports = router;

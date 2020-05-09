@@ -20,6 +20,10 @@ export default class AppRouter extends React.Component {
       main: LoginForm
     },
     {
+      path: "/resigter",
+      main: Resigter
+    },
+    {
       path: "/dashboard",
       exact: true,
       // sidebar: () => <div>home!</div>,
@@ -36,8 +40,8 @@ export default class AppRouter extends React.Component {
     let currentPath = window.location.pathname;
     return (
       <BrowserRouter forceRefresh={true}>
-        {currentPath != "/" ? <FsmSidebar /> : null}
-        {currentPath != "/" ? <FsmHeader /> : null }
+        {currentPath != ("/" || "/resigter") ? <FsmSidebar /> : null}
+        {currentPath != ("/" || "/resigter") ? <FsmHeader /> : null }
         <Switch>
           {this.routes.map((route, index) => (
             <Route key={index}
@@ -46,7 +50,7 @@ export default class AppRouter extends React.Component {
               children={<route.main />} />
           ))}
         </Switch>
-        {this.currentPath != "/" ? <FsmFooter /> :null }
+        {this.currentPath != ("/" || "/resigter") ? <FsmFooter /> :null }
       </BrowserRouter>
     )
   }
