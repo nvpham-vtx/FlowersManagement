@@ -1,5 +1,7 @@
 const oracledb = require('oracledb');
 const jwt = require('jsonwebtoken');
+const bcrypt = require('bcrypt');
+
 const config = {
     user: 'SYS',
     password: 'Nvp123456',
@@ -19,7 +21,7 @@ function authenticateUser(req, res) {
             }));
             return;
         }
-        connection.execute(`select email from users where email = '${email}'`, {}, { outFormat: oracledb.OBJECT },
+        connection.execute(`select email, password from users where email = '${email}'`, {}, { outFormat: oracledb.OBJECT },
             function (err, result) {
                 if (err || result.rows.length < 1) {
                     res.set('Content-Type', 'application/json');
@@ -28,6 +30,13 @@ function authenticateUser(req, res) {
                         status: status,
                         message: err ? "Error getting users" : "Unauthorized",
                         detailsMsg: err ? err.message : "Unauthorized"
+                    }));
+                } if (!bcrypt.compareSync(password, result.rows[0].PASSWORD)) {
+                    res.set('Content-Type', 'application/json');
+                    res.status(401).send(JSON.stringify({
+                        status: 401,
+                        message: "Unauthorized password",
+                        detailsMsg: "Unauthorized password"
                     }));
                 } else {
                     const payload = {
@@ -68,31 +77,30 @@ function getAllUsers(req, res) {
             }));
             return;
         }
-        connection.execute("select id, email, name, phone from users", {}, {
-            outFormat: oracledb.OBJECT
-        }, function (err, result) {
-            if (err) {
-                res.set('Content-Type', 'application/json');
-                res.status(500).send(JSON.stringify({
-                    status: 500,
-                    message: "Error getting users",
-                    detailsMsg: err.message
-                }));
-            } else {
-                res.contentType('application/json');
-                res.status(200).send(JSON.stringify({
-                    status: 200,
-                    data: result.rows,
-                    message: "Recived all users"
-                }));
-            }
-            connection.release(
-                function (err) {
-                    if (err) console.error(err.message);
-                    console.log("Get /users: connect release");
+        connection.execute("select id, email, name, phone from users", {}, { outFormat: oracledb.OBJECT },
+            function (err, result) {
+                if (err) {
+                    res.set('Content-Type', 'application/json');
+                    res.status(500).send(JSON.stringify({
+                        status: 500,
+                        message: "Error getting users",
+                        detailsMsg: err.message
+                    }));
+                } else {
+                    res.contentType('application/json');
+                    res.status(200).send(JSON.stringify({
+                        status: 200,
+                        data: result.rows,
+                        message: "Recived all users"
+                    }));
                 }
-            )
-        })
+                connection.release(
+                    function (err) {
+                        if (err) console.error(err.message);
+                        console.log("Get /users: connect release");
+                    }
+                )
+            })
     })
 }
 
@@ -107,11 +115,13 @@ function createUser(req, res) {
             }));
             return;
         }
+        let password = bcrypt.hashSync(req.body.password, 10);
         let sqlQuery = `insert into users(email, name, phone, password, createat) 
-        values('${req.body.email?req.body.email:''}', '${req.body.name ?req.body.name:''}',
-        '${req.body.phone?req.body.phone:''}','${req.body.password?req.body.password:''}',
-        '${req.body.createat?req.body.createat:''}')`;
-        connection.execute(sqlQuery, {}, {autoCommit:true, outFormat: oracledb.OBJECT
+        values('${req.body.email}', '${req.body.name ? req.body.name : ''}',
+        '${req.body.phone ? req.body.phone : ''}','${password}',
+        '${req.body.createat ? req.body.createat : ''}')`;
+        connection.execute(sqlQuery, {}, {
+            autoCommit: true, outFormat: oracledb.OBJECT
         }, function (err, result) {
             if (err) {
                 res.set('Content-Type', 'application/json');
@@ -122,12 +132,16 @@ function createUser(req, res) {
                 }));
             } else {
                 res.contentType('application/json');
-                res.status(200).set(req.body.email).end();
+                res.status(200).send(JSON.stringify({
+                    status: 200,
+                    data: req.body.email,
+                    message: "Created an user"
+                }));
             }
             connection.release(
                 function (err) {
                     if (err) console.error(err.message);
-                    console.log("Get /users: connect release");
+                    console.log("Post /user: connect release");
                 }
             )
         })
