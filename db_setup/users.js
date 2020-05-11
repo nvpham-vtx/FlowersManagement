@@ -9,6 +9,7 @@ const config = {
     privilege: oracledb.SYSDBA
 }
 
+
 function authenticateUser(req, res) {
     const { email, password } = req.body;
     oracledb.getConnection(config, function (err, connection) {
@@ -36,7 +37,6 @@ function authenticateUser(req, res) {
                     res.status(401).send(JSON.stringify({
                         status: 401,
                         message: "Unauthorized password",
-                        detailsMsg: "Unauthorized password"
                     }));
                 } else {
                     const payload = {
@@ -52,7 +52,6 @@ function authenticateUser(req, res) {
                     res.status(200).send(JSON.stringify({
                         status: 200,
                         user: result.rows[0],
-                        token: token,
                         message: "Recived an user"
                     }));
                 }
@@ -77,7 +76,7 @@ function getAllUsers(req, res) {
             }));
             return;
         }
-        connection.execute("select id, email, name, phone from users", {}, { outFormat: oracledb.OBJECT },
+        connection.execute("select * from users", {}, { outFormat: oracledb.OBJECT },
             function (err, result) {
                 if (err) {
                     res.set('Content-Type', 'application/json');
@@ -105,6 +104,10 @@ function getAllUsers(req, res) {
 }
 
 function createUser(req, res) {
+    let password = bcrypt.hashSync(req.body.password, 10);
+    req.body.password = password;
+    const fields = Object.keys(req.body).join(",");
+    const values = Object.values(req.body).join("','");
     oracledb.getConnection(config, function (err, connection) {
         if (err) {
             res.set('Content-Type', 'application/json');
@@ -115,11 +118,7 @@ function createUser(req, res) {
             }));
             return;
         }
-        let password = bcrypt.hashSync(req.body.password, 10);
-        let sqlQuery = `insert into users(email, name, phone, password, createat) 
-        values('${req.body.email}', '${req.body.name ? req.body.name : ''}',
-        '${req.body.phone ? req.body.phone : ''}','${password}',
-        '${req.body.createat ? req.body.createat : ''}')`;
+        let sqlQuery = `insert into users(${fields})values('${values}')`;
         connection.execute(sqlQuery, {}, {
             autoCommit: true, outFormat: oracledb.OBJECT
         }, function (err, result) {
@@ -148,8 +147,126 @@ function createUser(req, res) {
     })
 }
 
+function getUserById(req, res) {
+    oracledb.getConnection(config, function (err, connection) {
+        if (err) {
+            res.set('Content-Type', 'application/json');
+            res.status(500).send(JSON.stringify({
+                status: 500,
+                message: "Error connecting to database",
+                detailsMsg: err.message
+            }));
+            return;
+        }
+        connection.execute(`select * from users where email = '${req.params.email}'`, {}, { outFormat: oracledb.OBJECT },
+            function (err, result) {
+                if (err) {
+                    res.set('Content-Type', 'application/json');
+                    res.status(500).send(JSON.stringify({
+                        status: 500,
+                        message: "Error getting user",
+                        detailsMsg: err.message
+                    }));
+                } else {
+                    res.contentType('application/json');
+                    res.status(200).send(JSON.stringify({
+                        status: 200,
+                        data: result.rows,
+                        message: "Recived all users"
+                    }));
+                }
+                connection.release(
+                    function (err) {
+                        if (err) console.error(err.message);
+                        console.log("Get /users: connect release");
+                    }
+                )
+            })
+    })
+}
+
+function updateUserById(req, res) {
+    oracledb.getConnection(config, function (err, connection) {
+        if (err) {
+            res.set('Content-Type', 'application/json');
+            res.status(500).send(JSON.stringify({
+                status: 500,
+                message: "Error connecting to database",
+                detailsMsg: err.message
+            }));
+            return;
+        }
+        const setFieldValue = Object.entries(req.body ).map(([key,value]) => `${key} = '${value}'`).toString();
+        connection.execute(`update users set ${setFieldValue} where email = '${req.params.email}'`, {}, {autoCommit: true, outFormat: oracledb.OBJECT },
+            function (err, result) {
+                if (err) {
+                    res.set('Content-Type', 'application/json');
+                    res.status(500).send(JSON.stringify({
+                        status: 500,
+                        message: "Error getting user",
+                        detailsMsg: err.message
+                    }));
+                } else {
+                    res.contentType('application/json');
+                    res.status(200).send(JSON.stringify({
+                        status: 200,
+                        data: result.rows,
+                        message: "Updated an user"
+                    }));
+                }
+                connection.release(
+                    function (err) {
+                        if (err) console.error(err.message);
+                        console.log("Get /users: connect release");
+                    }
+                )
+            })
+    })
+}
+
+function deleteUserById(req, res) {
+    oracledb.getConnection(config, function (err, connection) {
+        if (err) {
+            res.set('Content-Type', 'application/json');
+            res.status(500).send(JSON.stringify({
+                status: 500,
+                message: "Error connecting to database",
+                detailsMsg: err.message
+            }));
+            return;
+        }
+        connection.execute(`delete from users where email = '${req.params.email}'`, {}, {autoCommit: true, outFormat: oracledb.OBJECT },
+            function (err, result) {
+                if (err) {
+                    res.set('Content-Type', 'application/json');
+                    res.status(500).send(JSON.stringify({
+                        status: 500,
+                        message: "Error getting user",
+                        detailsMsg: err.message
+                    }));
+                } else {
+                    res.contentType('application/json');
+                    res.status(200).send(JSON.stringify({
+                        status: 200,
+                        data: result.rows,
+                        message: "Deleted an user"
+                    }));
+                }
+                connection.release(
+                    function (err) {
+                        if (err) console.error(err.message);
+                        console.log("Get /users: connect release");
+                    }
+                )
+            })
+    })
+}
+
 module.exports = {
-    getAllUsers: getAllUsers,
     authenticateUser: authenticateUser,
-    createUser: createUser
+    getAllUsers: getAllUsers,
+    getUserById:getUserById,
+    createUser: createUser,
+    updateUserById: updateUserById,
+    deleteUserById: deleteUserById
 }
